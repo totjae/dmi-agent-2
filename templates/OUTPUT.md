@@ -1,6 +1,6 @@
 # Agent Output Template
 
-TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.1
+TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.2
 
 확정된 원본 보고서를 보존하고 아래 저장 구조에 기록한다. 이 템플릿은 새 분석을 요구하지 않는다. 후보·순위·확신도·가격·예상폭을 저장 단계에서 새로 만들거나 변경하지 않는다.
 에이전트 프롬프트와 명시적으로 충돌하는 지시는 임의로 우선순위를 정해 우회하지 말고 충돌 내용을 보고한다.
@@ -11,11 +11,14 @@ TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.1
 
 ```text
 [DMI_RUN_META]
-SCHEMA_VERSION: DMI_AGENT_v1.1
+SCHEMA_VERSION: DMI_AGENT_v1.2
 AGENT_ID:
 DATE:
 RUN_TIME_KST:
+SCHEDULED_AT_KST:
+STARTED_AT_KST:
 ANALYSIS_TIME_KST:
+REPORT_COMPLETED_AT_KST:
 DATA_CUTOFF_KST:
 PROMPT_PATH: /prompt/AGENT_PROMPT.md
 PROMPT_COMMIT:
@@ -27,7 +30,7 @@ RERUN_SEQUENCE: 0
 <에이전트 프롬프트가 요구하는 전체 원본 보고서>
 
 [STAGE_RESULT]
-SCHEMA_VERSION: DMI_AGENT_v1.1
+SCHEMA_VERSION: DMI_AGENT_v1.2
 AGENT_ID:
 DATE:
 RUN_TIME_KST:
@@ -89,3 +92,7 @@ MissingReasons: <판단 불가라고 명시된 항목과 원문 사유>
 본문과 TOP의 종목·순위·개수, FE 정의와 단위, 확신도 매핑을 대조한다.
 선택 블록의 Rank가 실제 TOP에 존재하는지 확인한다.
 N/A와 UNCERTAIN을 0으로 바꾸지 않는다. 선택 필드 누락을 이유로 원본 보고서에 없는 분석을 추가하지 않는다.
+
+## 시간 필드
+
+DATE와 RUN_TIME_KST는 예약 대상 거래일과 슬롯이며 캡슐에도 동일하게 기록한다. DATA_CUTOFF_KST=SCHEDULED_AT_KST=해당 DATE의 슬롯(+09:00)이다. 실제 시작·판단 확정·문서 완성은 별도 시각으로 기록한다. NORMAL은 번호 0, RECOVERY는 경로의 rerun 번호다. REPORT_COMPLETED_AT_KST는 GitHub 저장 성공시각이 아니다. 최종 보고에는 실제 저장 commit과 재열람 검증 결과를 남긴다.

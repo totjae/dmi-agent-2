@@ -1,6 +1,6 @@
 # Agent Output Template
 
-TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.2
+TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.3
 
 확정된 원본 보고서를 보존하고 아래 저장 구조에 기록한다. 이 템플릿은 새 분석을 요구하지 않는다. 후보·순위·확신도·가격·예상폭을 저장 단계에서 새로 만들거나 변경하지 않는다.
 에이전트 프롬프트와 명시적으로 충돌하는 지시는 임의로 우선순위를 정해 우회하지 말고 충돌 내용을 보고한다.
@@ -11,7 +11,7 @@ TEMPLATE_VERSION: DMI_AGENT_OUTPUT_v1.2
 
 ```text
 [DMI_RUN_META]
-SCHEMA_VERSION: DMI_AGENT_v1.2
+SCHEMA_VERSION: DMI_AGENT_v1.3
 AGENT_ID:
 DATE:
 RUN_TIME_KST:
@@ -22,6 +22,8 @@ REPORT_COMPLETED_AT_KST:
 DATA_CUTOFF_KST:
 PROMPT_PATH: /prompt/AGENT_PROMPT.md
 PROMPT_COMMIT:
+DOCUMENT_VERSIONS:
+<아래 문서 버전 규칙의 JSON 배열>
 RUN_TYPE: NORMAL
 RERUN_SEQUENCE: 0
 [/DMI_RUN_META]
@@ -30,7 +32,7 @@ RERUN_SEQUENCE: 0
 <에이전트 프롬프트가 요구하는 전체 원본 보고서>
 
 [STAGE_RESULT]
-SCHEMA_VERSION: DMI_AGENT_v1.2
+SCHEMA_VERSION: DMI_AGENT_v1.3
 AGENT_ID:
 DATE:
 RUN_TIME_KST:
@@ -96,3 +98,15 @@ N/A와 UNCERTAIN을 0으로 바꾸지 않는다. 선택 필드 누락을 이유�
 ## 시간 필드
 
 DATE와 RUN_TIME_KST는 예약 대상 거래일과 슬롯이며 캡슐에도 동일하게 기록한다. DATA_CUTOFF_KST=SCHEDULED_AT_KST=해당 DATE의 슬롯(+09:00)이다. 실제 시작·판단 확정·문서 완성은 별도 시각으로 기록한다. NORMAL은 번호 0, RECOVERY는 경로의 rerun 번호다. REPORT_COMPLETED_AT_KST는 GitHub 저장 성공시각이 아니다. 최종 보고에는 실제 저장 commit과 재열람 검증 결과를 남긴다.
+
+## 문서 버전 규칙
+
+DOCUMENT_VERSIONS는 다음 객체 세 개의 JSON 배열이다. 역할은 WORKFLOW, AGENT_PROMPT, OUTPUT이며 각 객체는 실제로 읽은 해당 파일을 나타낸다.
+
+```json
+[
+  {"role":"WORKFLOW","repository":"<현재 저장소>","path":"WORKFLOW.md","commit_sha":"N/A","blob_sha":"<조회에서 확인한 SHA 또는 N/A>","read_at_kst":"<ISO 8601 또는 N/A>","status":"VERIFIED","reason":"NONE"}
+]
+```
+
+예시 객체를 역할별로 작성한다. VERIFIED는 최소 blob SHA와 실제 읽은 내용의 연결이 확인된 경우이며 그렇지 않으면 UNVERIFIED와 사유를 기록한다. PROMPT_COMMIT은 AGENT_PROMPT 객체의 commit_sha와 동일하게 기록하고 blob SHA를 대신 넣지 않는다. 문서 버전 문자열은 Git SHA의 대체물이 아니다. 현재 보고서 자신의 저장 commit은 사전에 알 수 없으므로 이 목록에 넣지 않고 저장 후 응답으로 보고한다. 버전 기록은 분석 내용을 바꾸는 근거가 아니다.

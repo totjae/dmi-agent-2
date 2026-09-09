@@ -10,6 +10,12 @@ AGENT_ID: AGENT_2
 
 `/prompt/AGENT_PROMPT.md`가 없거나 비어 있으면 실행하지 말고 `PROMPT_UNAVAILABLE`을 보고한다.
 
+## 사용 문서 버전 기록
+
+각 실행 지침을 실제로 읽을 때 repository, path, 읽은 content의 blob SHA, 조회에 사용한 commit SHA(확인 가능할 때), READ_AT_KST를 보관한다. /WORKFLOW.md, /prompt/AGENT_PROMPT.md, /templates/OUTPUT.md 세 파일을 OUTPUT의 DOCUMENT_VERSIONS에 기록한다. 템플릿을 읽는 시점은 기존 실행 순서를 따른다.
+
+SHA는 해당 내용을 반환한 조회 응답 또는 검증된 revision에서만 가져온다. 실행 종료 시점의 최신 main SHA를 과거에 읽은 버전처럼 기록하지 않는다. commit SHA와 blob SHA를 혼용하지 않는다. blob SHA만 확인되면 commit은 N/A로 둔다. 버전 확인 실패만으로 분석을 중단하지 않고 해당 값은 N/A, 상태와 사유는 UNVERIFIED로 기록한다. 이후 리뷰는 버전 미확인 결과를 특정 버전의 성과로 묶지 않는다.
+
 ## 격리 규칙
 
 이 실행에서 읽을 수 있는 GitHub 저장소는 현재 저장소 하나뿐이다.

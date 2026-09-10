@@ -97,7 +97,7 @@ N/A와 UNCERTAIN을 0으로 바꾸지 않는다. 선택 필드 누락을 이유�
 
 ## 시간 필드
 
-DATE와 RUN_TIME_KST는 예약 대상 거래일과 슬롯이며 캡슐에도 동일하게 기록한다. DATA_CUTOFF_KST=SCHEDULED_AT_KST=해당 DATE의 슬롯(+09:00)이다. 실제 시작·판단 확정·문서 완성은 별도 시각으로 기록한다. NORMAL은 번호 0, RECOVERY는 경로의 rerun 번호다. REPORT_COMPLETED_AT_KST는 GitHub 저장 성공시각이 아니다. 최종 보고에는 실제 저장 commit과 재열람 검증 결과를 남긴다.
+DATE는 실제 실행일의 한국 날짜, RUN_TIME_KST는 저장·비교용 논리 슬롯이다. SCHEDULED_AT_KST는 실제 예약시각을 기록하고, 직접 실행이면 N/A로 둘 수 있다. 고정 정보 기준시각을 사용하지 않으므로 DATA_CUTOFF_KST는 N/A로 기록한다. 실제 시작·판단 확정·문서 완성은 별도 시각으로 기록한다. NORMAL은 번호 0, RECOVERY는 경로의 rerun 번호다. REPORT_COMPLETED_AT_KST는 GitHub 저장 성공시각이 아니다. 최종 보고에는 실제 저장 commit과 재열람 검증 결과를 남긴다.
 
 ## 문서 버전 규칙
 
